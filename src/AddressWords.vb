@@ -4,11 +4,20 @@
 Imports Common.Extensions
 Imports Common.Text
 
+''' <summary>
+''' 検索ワード。
+''' ほかの検索ワードオブジェクトとワードが一致するか判定できる。
+''' </summary>
 Public Structure AddressWords
+  ''' 郵便番号  
   Private ReadOnly _zipcode As Common.Text.MatchingText
+  ''' 都道府県
   Private ReadOnly _prefecture As Common.Text.MatchingText
+  ''' 市町村
   Private ReadOnly _city As Common.Text.MatchingText
+  ''' 町域
   Private ReadOnly _townArea As Common.Text.MatchingText
+  ''' 事業所、郵便局
   Private ReadOnly _office As Common.Text.MatchingText
   
   Public Sub New(
@@ -35,6 +44,17 @@ Public Structure AddressWords
     Me._office     = New MatchingText(office,     matchingModeOfOffice)
   End Sub
   
+
+  
+  Public Sub New(zipcode As String, prefecture As String, city As String, townArea As String, office As String)
+    Me.New(
+      zipcode,      MatchingMode.Forward,
+      prefecture,   MatchingMode.Forward,
+      city,         MatchingMode.Forward,
+      townArea,     MatchingMode.Forward,
+      office,       MatchingMode.Forward)
+  End Sub
+  
   Public Sub New(zipcode As String, prefecture As String, city As String, townArea As String)
     Me.New(
       zipcode,      MatchingMode.Forward,
@@ -44,31 +64,49 @@ Public Structure AddressWords
       String.Empty, MatchingMode.Forward)
   End Sub
   
+  ''' <summary>
+  ''' すべての住所情報と事業所名を持つCSVからこのオブジェクトを生成する。
+  ''' </summary>
   Public Shared Function CreateFromCsvOfFullAddressAndOffice(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
     Return New AddressWords(fields(0), fields(1), fields(2), fields(3), fields(4))
   End Function
   
+  ''' <summary>
+  ''' 郵便番号と事業所名を持ち、都道府県、市町村、町域がカンマで分割されてないCSVテキストからこのオブジェクトを生成する。
+  ''' </summary>
   Public Shared Function CreateFromCsvOfAddressTextAndOffice(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
     Return New AddressWords(fields(0), fields(1), "", "", fields(4))
   End Function
   
+  ''' <summary>
+  ''' すべての住所情報を持つ（事業所名は除く）CSVからこのオブジェクトを生成する。
+  ''' </summary>
   Public Shared Function CreateFromCsvOfFullAddress(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
     Return New AddressWords(fields(0), fields(1), fields(2), fields(3))
   End Function
   
+  ''' <summary>
+  ''' 郵便番号と市町村のCSVからこのオブジェクトを生成する。
+  ''' </summary>
   Public Shared Function CreateFromCsvOfZipAndCity(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
     Return New AddressWords(fields(0), "", fields(1), "")
   End Function
   
+  ''' <summary>
+  ''' 郵便番号と町域のCSVからこのオブジェクトを生成する。
+  ''' </summary>
   Public Shared Function CreateFromCsvOfZipAndTownArea(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
     Return New AddressWords(fields(0), "", "", fields(1))
   End Function
   
+  ''' <summary>
+  ''' 郵便番号と事業所名のCSVからこのオブジェクトを生成する。
+  ''' </summary>
   Public Shared Function CreateFromCsvOfZipAndOffice(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
     Return New AddressWords(fields(0), "", "", "", fields(1))
@@ -133,6 +171,11 @@ Public Structure AddressWords
     Return Me._Prefecture.Word & Me._City.Word & Me._TownArea.Word
   End Function
   
+  ''' <summary>
+  ''' ほかのオブジェクトと検索ワードが一致するか比較する。
+  ''' このオブジェクトが検索する文字列であり、引数のオブジェクトが検索されるオブジェクトになる。
+  ''' このオブジェクトが持つ文字列を、引数のオブジェクトが部分的に持っていれば一致するとみなす。
+  ''' </summary>
   Public Function Matching(words As AddressWords) As Boolean
     Return _
       Me._zipcode.Matching(words._zipcode, True)       AndAlso
