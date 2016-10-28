@@ -6,4 +6,5 @@ Public Enum AddressItem
   Prefecture
   City
   TownArea
+  Office
 End Enum
