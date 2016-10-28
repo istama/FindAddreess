@@ -52,9 +52,23 @@ Partial Class MainForm
     Me.tabControl1 = New System.Windows.Forms.TabControl()
     Me.tabPage1 = New System.Windows.Forms.TabPage()
     Me.tabPage2 = New System.Windows.Forms.TabPage()
+    Me.tboxPostOffice = New System.Windows.Forms.TextBox()
+    Me.label8 = New System.Windows.Forms.Label()
+    Me.tboxZipcodeOfPostOffice = New System.Windows.Forms.TextBox()
+    Me.label12 = New System.Windows.Forms.Label()
+    Me.label13 = New System.Windows.Forms.Label()
+    Me.label14 = New System.Windows.Forms.Label()
+    Me.tboxPrefectureOfPostOffice = New System.Windows.Forms.TextBox()
+    Me.label15 = New System.Windows.Forms.Label()
+    Me.label17 = New System.Windows.Forms.Label()
+    Me.label18 = New System.Windows.Forms.Label()
+    Me.cboxMatchingModeOfPostOffice = New System.Windows.Forms.ComboBox()
+    Me.btnSearchForPostOffice = New System.Windows.Forms.Button()
+    Me.label19 = New System.Windows.Forms.Label()
     CType(Me.dataGridView1,System.ComponentModel.ISupportInitialize).BeginInit
     Me.tabControl1.SuspendLayout
     Me.tabPage1.SuspendLayout
+    Me.tabPage2.SuspendLayout
     Me.SuspendLayout
     '
     'label1
@@ -301,12 +315,140 @@ Partial Class MainForm
     'tabPage2
     '
     Me.tabPage2.BackColor = System.Drawing.Color.Transparent
+    Me.tabPage2.Controls.Add(Me.tboxPostOffice)
+    Me.tabPage2.Controls.Add(Me.label8)
+    Me.tabPage2.Controls.Add(Me.tboxZipcodeOfPostOffice)
+    Me.tabPage2.Controls.Add(Me.label12)
+    Me.tabPage2.Controls.Add(Me.label13)
+    Me.tabPage2.Controls.Add(Me.label14)
+    Me.tabPage2.Controls.Add(Me.tboxPrefectureOfPostOffice)
+    Me.tabPage2.Controls.Add(Me.label15)
+    Me.tabPage2.Controls.Add(Me.label17)
+    Me.tabPage2.Controls.Add(Me.label18)
+    Me.tabPage2.Controls.Add(Me.cboxMatchingModeOfPostOffice)
+    Me.tabPage2.Controls.Add(Me.btnSearchForPostOffice)
+    Me.tabPage2.Controls.Add(Me.label19)
     Me.tabPage2.Location = New System.Drawing.Point(4, 22)
     Me.tabPage2.Name = "tabPage2"
     Me.tabPage2.Padding = New System.Windows.Forms.Padding(3)
-    Me.tabPage2.Size = New System.Drawing.Size(398, 178)
+    Me.tabPage2.Size = New System.Drawing.Size(404, 178)
     Me.tabPage2.TabIndex = 1
     Me.tabPage2.Text = "郵便局"
+    '
+    'tboxPostOffice
+    '
+    Me.tboxPostOffice.ImeMode = System.Windows.Forms.ImeMode.Hiragana
+    Me.tboxPostOffice.Location = New System.Drawing.Point(84, 88)
+    Me.tboxPostOffice.Name = "tboxPostOffice"
+    Me.tboxPostOffice.Size = New System.Drawing.Size(152, 19)
+    Me.tboxPostOffice.TabIndex = 23
+    '
+    'label8
+    '
+    Me.label8.AutoSize = true
+    Me.label8.Location = New System.Drawing.Point(15, 41)
+    Me.label8.Name = "label8"
+    Me.label8.Size = New System.Drawing.Size(53, 12)
+    Me.label8.TabIndex = 20
+    Me.label8.Text = "郵便番号"
+    '
+    'tboxZipcodeOfPostOffice
+    '
+    Me.tboxZipcodeOfPostOffice.ImeMode = System.Windows.Forms.ImeMode.Alpha
+    Me.tboxZipcodeOfPostOffice.Location = New System.Drawing.Point(84, 38)
+    Me.tboxZipcodeOfPostOffice.Name = "tboxZipcodeOfPostOffice"
+    Me.tboxZipcodeOfPostOffice.Size = New System.Drawing.Size(152, 19)
+    Me.tboxZipcodeOfPostOffice.TabIndex = 21
+    '
+    'label12
+    '
+    Me.label12.AutoSize = true
+    Me.label12.Location = New System.Drawing.Point(246, 16)
+    Me.label12.Name = "label12"
+    Me.label12.Size = New System.Drawing.Size(53, 12)
+    Me.label12.TabIndex = 35
+    Me.label12.Text = "検索方法"
+    '
+    'label13
+    '
+    Me.label13.AutoSize = true
+    Me.label13.Location = New System.Drawing.Point(15, 66)
+    Me.label13.Name = "label13"
+    Me.label13.Size = New System.Drawing.Size(53, 12)
+    Me.label13.TabIndex = 22
+    Me.label13.Text = "都道府県"
+    '
+    'label14
+    '
+    Me.label14.AutoSize = true
+    Me.label14.Location = New System.Drawing.Point(84, 16)
+    Me.label14.Name = "label14"
+    Me.label14.Size = New System.Drawing.Size(57, 12)
+    Me.label14.TabIndex = 34
+    Me.label14.Text = "検索ワード"
+    '
+    'tboxPrefectureOfPostOffice
+    '
+    Me.tboxPrefectureOfPostOffice.ImeMode = System.Windows.Forms.ImeMode.Hiragana
+    Me.tboxPrefectureOfPostOffice.Location = New System.Drawing.Point(84, 63)
+    Me.tboxPrefectureOfPostOffice.Name = "tboxPrefectureOfPostOffice"
+    Me.tboxPrefectureOfPostOffice.Size = New System.Drawing.Size(152, 19)
+    Me.tboxPrefectureOfPostOffice.TabIndex = 22
+    '
+    'label15
+    '
+    Me.label15.AutoSize = true
+    Me.label15.Location = New System.Drawing.Point(15, 91)
+    Me.label15.Name = "label15"
+    Me.label15.Size = New System.Drawing.Size(53, 12)
+    Me.label15.TabIndex = 26
+    Me.label15.Text = "郵便局名"
+    '
+    'label17
+    '
+    Me.label17.AutoSize = true
+    Me.label17.Location = New System.Drawing.Point(246, 66)
+    Me.label17.Name = "label17"
+    Me.label17.Size = New System.Drawing.Size(53, 12)
+    Me.label17.TabIndex = 33
+    Me.label17.Text = "前方一致"
+    '
+    'label18
+    '
+    Me.label18.AutoSize = true
+    Me.label18.Location = New System.Drawing.Point(246, 41)
+    Me.label18.Name = "label18"
+    Me.label18.Size = New System.Drawing.Size(53, 12)
+    Me.label18.TabIndex = 32
+    Me.label18.Text = "前方一致"
+    '
+    'cboxMatchingModeOfPostOffice
+    '
+    Me.cboxMatchingModeOfPostOffice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+    Me.cboxMatchingModeOfPostOffice.FormattingEnabled = true
+    Me.cboxMatchingModeOfPostOffice.Items.AddRange(New Object() {"前方一致", "完全一致", "部分一致"})
+    Me.cboxMatchingModeOfPostOffice.Location = New System.Drawing.Point(246, 87)
+    Me.cboxMatchingModeOfPostOffice.Name = "cboxMatchingModeOfPostOffice"
+    Me.cboxMatchingModeOfPostOffice.Size = New System.Drawing.Size(102, 20)
+    Me.cboxMatchingModeOfPostOffice.TabIndex = 24
+    '
+    'btnSearchForPostOffice
+    '
+    Me.btnSearchForPostOffice.Location = New System.Drawing.Point(246, 111)
+    Me.btnSearchForPostOffice.Name = "btnSearchForPostOffice"
+    Me.btnSearchForPostOffice.Size = New System.Drawing.Size(102, 25)
+    Me.btnSearchForPostOffice.TabIndex = 25
+    Me.btnSearchForPostOffice.Text = "検索"
+    Me.btnSearchForPostOffice.UseVisualStyleBackColor = true
+    '
+    'label19
+    '
+    Me.label19.AutoSize = true
+    Me.label19.Location = New System.Drawing.Point(73, 111)
+    Me.label19.Name = "label19"
+    Me.label19.Size = New System.Drawing.Size(163, 12)
+    Me.label19.TabIndex = 31
+    Me.label19.Text = "「？」はすべての文字に一致します"
     '
     'MainForm
     '
@@ -327,9 +469,24 @@ Partial Class MainForm
     Me.tabControl1.ResumeLayout(false)
     Me.tabPage1.ResumeLayout(false)
     Me.tabPage1.PerformLayout
+    Me.tabPage2.ResumeLayout(false)
+    Me.tabPage2.PerformLayout
     Me.ResumeLayout(false)
     Me.PerformLayout
   End Sub
+  Private label19 As System.Windows.Forms.Label
+  Private btnSearchForPostOffice As System.Windows.Forms.Button
+  Private cboxMatchingModeOfPostOffice As System.Windows.Forms.ComboBox
+  Private label18 As System.Windows.Forms.Label
+  Private label17 As System.Windows.Forms.Label
+  Private label15 As System.Windows.Forms.Label
+  Private tboxPrefectureOfPostOffice As System.Windows.Forms.TextBox
+  Private label14 As System.Windows.Forms.Label
+  Private label13 As System.Windows.Forms.Label
+  Private label12 As System.Windows.Forms.Label
+  Private tboxZipcodeOfPostOffice As System.Windows.Forms.TextBox
+  Private label8 As System.Windows.Forms.Label
+  Private tboxPostOffice As System.Windows.Forms.TextBox
   Private tabPage2 As System.Windows.Forms.TabPage
   Private tabPage1 As System.Windows.Forms.TabPage
   Private tabControl1 As System.Windows.Forms.TabControl
