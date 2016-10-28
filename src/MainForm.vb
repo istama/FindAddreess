@@ -160,7 +160,7 @@ Public Partial Class MainForm
         Me.running = True
         SetBtnSearchName("停止")
         SetLblMessage("検索中です...")
-        Search()
+        Search(CreateAddressWords(), AddressType.Address)
       Else
         Halt()
       End If
@@ -171,10 +171,10 @@ Public Partial Class MainForm
     End Try
   End Sub
   
-  Private Sub Search()
+  Private Sub Search(addrWords As AddressWords, addrType As AddressType)
     ClearAddressView()
     
-    Me.searcher = New Searcher(CreateAddressWords())
+    Me.searcher = New Searcher(addrWords, addrType)
     
     ' 検索中に例外が発生したときハンドラを設定
     searcher.ErrorHandler =
@@ -265,6 +265,20 @@ Public Partial Class MainForm
       Me.dataGridView1.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders)
     End If
   End Sub
+  
+  ''' <summary>
+  ''' 検索するアドレスの種類を取得する。
+  ''' </summary>
+  Private Function GetSearchAddressType() As AddressType
+    Dim page As Integer = Me.tabControl1.SelectedIndex
+    If page = 0 Then
+      Return AddressType.Address
+    ElseIf page = 1
+      Return AddressType.PostOffice
+    Else
+      Throw New InvalidOperationException("selected invalid tab page")
+    End If
+  End Function
   
   ''' <summary>
   ''' DataGridViewのテキストを編集しようとしたときに発生するイベントハンドラ

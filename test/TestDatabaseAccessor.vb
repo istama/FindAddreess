@@ -57,7 +57,7 @@ Public Class TestDatabaseAccessor
     Dim addr As AddressWords = AddressWords.CreateFromCsvOfFullAddress(csv)
     Dim param As New DatabaseAccessParameter(addr)
     Dim res As New List(Of String)
-    DatabaseAccessor.Read(param, Sub(txt) res.Add(txt))
+    DatabaseAccessor.Read(param, AddressType.Address, Sub(txt) res.Add(txt))
     
     Return res
   End Function

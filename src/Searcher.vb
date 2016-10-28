@@ -7,13 +7,15 @@ Imports System.Linq
 
 Public Class Searcher
   Private searchingWords As AddressWords
+  Private addrType As AddressType
   
   Private tasks As ConcurrentQueue(Of Task)
   Private running As Boolean
   Private _errorHandler As Action(Of Exception)
   
-  Public Sub New(words As AddressWords)
+  Public Sub New(words As AddressWords, addrType As AddressType)
     Me.searchingWords = words
+    Me.addrType       = addrType
   End Sub
   
   Public Function IsRunning As Boolean
@@ -70,6 +72,7 @@ Public Class Searcher
       Dim param As New DatabaseAccessParameter(words)
       DatabaseAccessor.Read(
         param,
+        Me.addrType,
         Sub(csv)
           ' 停止命令があった場合
           If Not Me.running Then Return

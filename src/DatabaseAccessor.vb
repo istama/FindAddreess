@@ -27,12 +27,12 @@ Public Class DatabaseAccessor
   ''' <summary>
   ''' ファイルにアクセスし、１行ごとにコールバック関数を呼び出し、読み込んだテキストを渡す。
   ''' </summary>
-  Public Shared Sub Read(param As DatabaseAccessParameter, callback As Action(Of String))
+  Public Shared Sub Read(param As DatabaseAccessParameter, addrType As AddressType, callback As Action(Of String))
     ' ファイル名が正規表現になっているかどうかで読み込み方法を替える
     If Regex.IsMatch(param.FileNameRegexp, "^[^.]+$") Then
-      AccessByText(param, callback)
+      AccessByText(param, addrType, callback)
     Else
-      AccessByRegexp(param, callback)
+      AccessByRegexp(param, addrType, callback)
     End If
   End Sub
   
@@ -40,8 +40,8 @@ Public Class DatabaseAccessor
   ''' ファイル名を正規表現としてファイルアクセスする。
   ''' あいまいなファイル名や一度に複数のファイルを読み込めるがアクセス速度は遅い。
   ''' </summary>
-  Private Shared Sub AccessByRegexp(param As DatabaseAccessParameter, f As Action(Of String))
-    Dim dir As String = DatabaseDir(param)
+  Private Shared Sub AccessByRegexp(param As DatabaseAccessParameter, addrType As AddressType, f As Action(Of String))
+    Dim dir As String = DatabaseDir(param, addrType)
     Dim fileNameRegexp As String = param.FileNameRegexp()
     
     Directory.GetFiles(dir).
@@ -58,8 +58,8 @@ Public Class DatabaseAccessor
   ''' <summary>
   ''' 一意のファイルにアクセスする。
   ''' </summary>
-  Private Shared Sub AccessByText(param As DatabaseAccessParameter, f As Action(Of String))
-    Dim path As String = IO.Path.Combine(DatabaseDir(param), param.FileNameRegexp() & FILE_EXTENTION)
+  Private Shared Sub AccessByText(param As DatabaseAccessParameter, addrType As AddressType, f As Action(Of String))
+    Dim path As String = IO.Path.Combine(DatabaseDir(param, addrType), param.FileNameRegexp() & FILE_EXTENTION)
     
     Dim file As New TextFile(path, System.Text.Encoding.UTF8)
     If file.Exists Then
@@ -70,8 +70,10 @@ Public Class DatabaseAccessor
   ''' <summary>
   ''' データベースのディレクトリを指し示すパスを取得する。
   ''' </summary>
-  Private Shared Function DatabaseDir(param As DatabaseAccessParameter) As String
-    Return Path.Combine(_databasePath, param.SearchingAddressItem.ToString) 
+  Private Shared Function DatabaseDir(param As DatabaseAccessParameter, addrType As AddressType) As String
+    Dim addrTypePath As String = Path.Combine(_databasePath, addrType.ToString)
+    Return Path.Combine(addrTypePath, param.SearchingAddressItem.ToString) 
   End Function
   
 End Class
+

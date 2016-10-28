@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.vb" />
     <Compile Include="src\AddressItem.vb" />
+    <Compile Include="src\AddressType.vb" />
     <Compile Include="src\AddressWords.vb" />
     <Compile Include="src\DatabaseAccessor.vb" />
     <Compile Include="src\DatabaseAccessParameter.vb" />

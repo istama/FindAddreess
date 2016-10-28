@@ -58,16 +58,16 @@ Public Class TestAddressWords
       "",        MatchingMode.Forward)
     
     Dim addr1 As AddressWords = AddressWords.CreateFromCsvOfFullAddress("160,,新宿,西新宿")
-    Assert.True(words.Matching(addr1))
+    Assert.True(words.Matching(addr1), "addr1 fail")
     
     Dim addr2 As AddressWords = AddressWords.CreateFromCsvOfFullAddress("161,東京都,新橋,")
-    Assert.True(words.Matching(addr2))
+    Assert.True(words.Matching(addr2), "addr2 fail")
     
     Dim addr3 As AddressWords = AddressWords.CreateFromCsvOfFullAddress("160,,,")
-    Assert.False(words.Matching(addr3))
+    Assert.True(words.Matching(addr3), "addr3 fail")
     
     Dim addr4 As AddressWords = AddressWords.CreateFromCsvOfFullAddress("161,,新小平,")
-    Assert.False(words.Matching(addr4))
+    Assert.False(words.Matching(addr4), "addr4 fail")
     
     Dim words2 As New AddressWords(
       "",     MatchingMode.Forward,
@@ -76,9 +76,9 @@ Public Class TestAddressWords
       "山川", MatchingMode.Part)
     
     Dim addr5 As AddressWords = AddressWords.CreateFromCsvOfFullAddress("200,神奈川県,箱根市,新山川町")
-    Assert.True(words2.Matching(addr5))
+    Assert.True(words2.Matching(addr5), "addr5 fail")
     
     Dim addr6 As AddressWords = AddressWords.CreateFromCsvOfFullAddress("200,京都府,,新山川町")
-    Assert.False(words2.Matching(addr6))
+    Assert.False(words2.Matching(addr6), "addr6 fail")
   End Sub
 End Class

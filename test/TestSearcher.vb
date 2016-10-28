@@ -32,7 +32,7 @@ Public Class TestSearcher
   
   Private Function Access(addr As AddressWords) As List(Of AddressWords)
     Dim res As New List(Of AddressWords)
-    Dim s As New Searcher(addr)
+    Dim s As New Searcher(addr, AddressType.Address)
     s.Run(Sub(a) res.Add(a))
     s.Wait
     
