@@ -44,7 +44,22 @@ Public Structure AddressWords
     Me._office     = New MatchingText(office,     matchingModeOfOffice)
   End Sub
   
-
+  Public Sub New(
+    zipcode As String,
+    matchingModeOfZipcode As MatchingMode,
+    prefecture As String,
+    matchingModeOfPrefecture As MatchingMode,
+    city As String,
+    matchingModeOfCity As MatchingMode,
+    townArea As String,
+    matchingModeOfTownArea As MatchingMode)
+    Me.New(
+      zipcode,      matchingModeOfZipcode,
+      prefecture,   matchingModeOfPrefecture,
+      city,         matchingModeOfCity,
+      townArea,     matchingModeOfTownArea,
+      String.Empty, MatchingMode.Forward)
+  End Sub
   
   Public Sub New(zipcode As String, prefecture As String, city As String, townArea As String, office As String)
     Me.New(
@@ -77,7 +92,7 @@ Public Structure AddressWords
   ''' </summary>
   Public Shared Function CreateFromCsvOfAddressTextAndOffice(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
-    Return New AddressWords(fields(0), fields(1), "", "", fields(4))
+    Return New AddressWords(fields(0), fields(1), "", "", fields(2))
   End Function
   
   ''' <summary>
