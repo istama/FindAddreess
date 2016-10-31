@@ -305,10 +305,13 @@ Public Partial Class MainForm
       If addrType = AddressType.Address Then
         Me.addressDataTable = CreateAddressTable()
         Me.dataGridView1.DataSource = Me.addressDataTable
+        Me.dataGridView1.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       Else
         Me.addressDataTable = CreateAddressAndOfficeTable()
         Me.dataGridView1.DataSource = Me.addressDataTable
+        Me.dataGridView1.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Me.dataGridView1.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
       End If
       

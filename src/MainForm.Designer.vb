@@ -353,6 +353,7 @@ Partial Class MainForm
     Me.tboxPostOffice.Name = "tboxPostOffice"
     Me.tboxPostOffice.Size = New System.Drawing.Size(152, 19)
     Me.tboxPostOffice.TabIndex = 23
+    AddHandler Me.tboxPostOffice.KeyPress, AddressOf Me.TboxKeyPress
     '
     'label8
     '
@@ -370,6 +371,7 @@ Partial Class MainForm
     Me.tboxZipcodeOfPostOffice.Name = "tboxZipcodeOfPostOffice"
     Me.tboxZipcodeOfPostOffice.Size = New System.Drawing.Size(152, 19)
     Me.tboxZipcodeOfPostOffice.TabIndex = 21
+    AddHandler Me.tboxZipcodeOfPostOffice.KeyPress, AddressOf Me.TboxZipcodeKeyPress
     '
     'label12
     '
@@ -405,6 +407,7 @@ Partial Class MainForm
     Me.tboxPrefectureOfPostOffice.Name = "tboxPrefectureOfPostOffice"
     Me.tboxPrefectureOfPostOffice.Size = New System.Drawing.Size(152, 19)
     Me.tboxPrefectureOfPostOffice.TabIndex = 22
+    AddHandler Me.tboxPrefectureOfPostOffice.KeyPress, AddressOf Me.TboxKeyPress
     '
     'label15
     '
