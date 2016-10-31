@@ -8,7 +8,11 @@ Imports System.Linq
 Imports Common.IO
 Imports Common.Extensions
 
+''' <summary>
+''' データベースにアクセスするクラス。
+''' </summary>
 Public Class DatabaseAccessor
+  ''' データベースのトップディレクトリのパス  
   Private Shared _databasePath As String = "AddressDB"
   Public Shared Property DBPath As String
     Get
@@ -22,6 +26,7 @@ Public Class DatabaseAccessor
     End Set
   End Property
   
+  ''' データベース内のデータファイルの拡張子
   Public Const FILE_EXTENTION = ".txt"
   
   ''' <summary>
