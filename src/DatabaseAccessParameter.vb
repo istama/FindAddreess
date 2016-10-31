@@ -10,7 +10,9 @@ Imports Common.Util
 ''' ファイルにアクセスするための要素をまとめた構造体。
 ''' </summary>
 Public Structure DatabaseAccessParameter
+  ''' このオブジェクトがデータベースにアクセスするときに使用する検索項目の種類
   Private _searchingAddressItem As AddressItem
+  ''' このオブジェクトがデータベースにアクセスするときのアクセス先となるファイル名の正規表現
   Private _fileRegexp As String
   
   Public Sub New(words As AddressWords)
@@ -36,6 +38,8 @@ Public Structure DatabaseAccessParameter
     
     If AllowToSearchByZipcode(words) Then
       Return AddressItem.Zipcode
+    ElseIf AllowToSearchByOffice(words)
+      Return AddressItem.Office
     ElseIf AllowToSearchByTownArea(words)
       Return AddressItem.TownArea
     ElseIf AllowToSearchByCity(words)
@@ -57,30 +61,54 @@ Public Structure DatabaseAccessParameter
     End If
   End Function
   
+  ''' <summary>
+  ''' このオブジェクトが郵便番号を使ってデータベースアクセスすべきかどうか判定する。
+  ''' </summary>
   Private Function AllowToSearchByZipcode(words As AddressWords) As Boolean
     Dim word As String = words.Zipcode(0)
     Dim mm As MatchingMode = words.MatchingModeOfZipcode
     Return word.Length >= 3 AndAlso word.Chars(0) <> "." AndAlso (mm = Forward OrElse mm = Perfection)
   End Function
   
+  ''' <summary>
+  ''' このオブジェクトが事業署名を使ってデータベースアクセスすべきかどうか判定する。
+  ''' </summary>
+  Private Function AllowToSearchByOffice(words As AddressWords) As Boolean
+    Dim word As String = words.Office(0)
+    Dim mm As MatchingMode = words.MatchingModeOfOffice
+    Return word.Length > 0  AndAlso word.Chars(0) <> "." AndAlso (mm = Forward OrElse mm = Perfection)
+  End Function
+  
+  ''' <summary>
+  ''' このオブジェクトが町域使ってデータベースアクセスすべきかどうか判定する。
+  ''' </summary>
   Private Function AllowToSearchByTownArea(words As AddressWords) As Boolean
     Dim word As String = words.TownArea(0)
     Dim mm As MatchingMode = words.MatchingModeOfTownArea
     Return word.Length > 0  AndAlso word.Chars(0) <> "." AndAlso (mm = Forward OrElse mm = Perfection)
   End Function
   
+  ''' <summary>
+  ''' このオブジェクトが市町村を使ってデータベースアクセスすべきかどうか判定する。
+  ''' </summary>
   Private Function AllowToSearchByCity(words As AddressWords) As Boolean
     Dim word As String = words.City(0)
     Dim mm As MatchingMode = words.MatchingModeOfCity
     Return word.Length > 0  AndAlso word.Chars(0) <> "." AndAlso (mm = Forward OrElse mm = Perfection)
   End Function
-   
+  
+  ''' <summary>
+  ''' このオブジェクトが都道府県名を使ってデータベースアクセスすべきかどうか判定する。
+  ''' </summary>
   Private Function AllowToSearchByPrefecture(words As AddressWords) As Boolean
     Dim word As String = words.Prefecture(0)
     Dim mm As MatchingMode = words.MatchingModeOfPrefecture
     Return word.Length > 0
   End Function 
   
+  ''' <summary>
+  ''' このオブジェクトがあいまいな郵便番号を使ってデータベースアクセスすべきかどうか判定する。
+  ''' </summary>
   Private Function AllowToSearchByFuzzyZipcode(words As AddressWords) As Boolean
     Dim word As String = words.Zipcode(0)
     Dim mm As MatchingMode = words.MatchingModeOfZipcode
@@ -97,8 +125,10 @@ Public Structure DatabaseAccessParameter
       Return FileNameRegexpOfPrefecture(words)
     ElseIf searchingItem = AddressItem.City
       Return FileNameOfCity(words)
-    Else
+    ElseIf searchingItem = AddressItem.TownArea
       Return FileNameOfTownArea(words)
+    Else
+      Return FileNameOfOffice(words)
     End If
   End Function
   
@@ -119,6 +149,11 @@ Public Structure DatabaseAccessParameter
   
   Private Function FileNameOfTownArea(words As AddressWords) As String
     Dim word As String = words.TownArea(0)
+    Return TextUtils.ToCharCode(word, 3).ToString
+  End Function
+  
+  Private Function FileNameOfOffice(words As AddressWords) As String
+    Dim word As String = words.Office(0)
     Return TextUtils.ToCharCode(word, 3).ToString
   End Function
 End Structure
