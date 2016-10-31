@@ -159,8 +159,8 @@ Public Partial Class MainForm
     Try
       If Not Me.running Then
         Me.running = True
-        SetBtnSearchName("停止")
-        SetLblMessage("検索中です...")
+        SetTextToControl(Me.btnSearch, "停止")
+        SetTextToControl(Me.lblMessage, "検索中です...")
         Search(CreateAddressWords(), AddressType.Address)
       Else
         Halt()
@@ -168,7 +168,7 @@ Public Partial Class MainForm
     Catch ex As Exception
       MsgBox.ShowError(ex)
       Me.running = False
-      SetBtnSearchName("検索")
+      SetTextToControl(Me.btnSearch, "検索")
     End Try
   End Sub
   
@@ -213,9 +213,10 @@ Public Partial Class MainForm
       End Sub,
       Sub(tasks)
         UpdateAddressView()
-        SetBtnSearchName("検索")
-        SetLblMessage("検索終了")
-        SetLblFoundAddr("")
+        SetTextToControl(Me.btnSearch, "検索")
+        SetTextToControl(Me.btnSearchForPostOffice, "検索")
+        SetTextToControl(Me.lblMessage, "検索終了")
+        SetTextToControl(Me.lblFoundAddr, "")
         Me.running = False
       End Sub)
   End Sub
@@ -260,15 +261,7 @@ Public Partial Class MainForm
         office,       DirectCast(Me.cboxMatchingModeOfPostOffice.SelectedValue, MatchingMode))
   End Function
   
-  Private Sub SetBtnSearchName(name As String)
-    If Me.btnSearch.InvokeRequired Then
-      Me.btnSearch.Invoke(
-        New SetStringDelegate(AddressOf SetBtnSearchName),
-        New Object() { name })
-    Else
-      Me.btnSearch.Text = name
-    End If
-  End Sub
+
   
   Private Sub SetLblMessage(msg As String)
     If Me.lblMessage.InvokeRequired Then
