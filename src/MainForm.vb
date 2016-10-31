@@ -176,8 +176,8 @@ Public Partial Class MainForm
     Try
       If Not Me.running Then
         Me.running = True
-        'SetBtnSearchName("停止")
-        SetLblMessage("検索中です...")
+        SetTextToControl(Me.btnSearchForPostOffice, "停止")
+        SetTextToControl(Me.lblMessage, "検索中です...")
         Search(CreatePostOfficeAddressWords(), AddressType.PostOffice)
       Else
         Halt()
@@ -185,7 +185,7 @@ Public Partial Class MainForm
     Catch ex As Exception
       MsgBox.ShowError(ex)
       Me.running = False
-      'SetBtnSearchName("検索")
+      SetTextToControl(Me.btnSearchForPostOffice, "検索")
     End Try    
   End Sub
   
@@ -253,11 +253,11 @@ Public Partial Class MainForm
     
     Return _
       New AddressWords(
-      zip,          MatchingMode.Forward,
-      String.Empty, MatchingMode.Forward,
-      String.Empty, MatchingMode.Forward,
-      pre,          MatchingMode.Forward,
-      office,       DirectCast(Me.cboxMatchingModeOfPostOffice.SelectedValue, MatchingMode))
+        zip,          MatchingMode.Forward,
+        String.Empty, MatchingMode.Forward,
+        String.Empty, MatchingMode.Forward,
+        pre,          MatchingMode.Forward,
+        office,       DirectCast(Me.cboxMatchingModeOfPostOffice.SelectedValue, MatchingMode))
   End Function
   
   Private Sub SetBtnSearchName(name As String)
@@ -288,6 +288,16 @@ Public Partial Class MainForm
     Else
       Me.lblFoundAddr.Text = msg
     End If
+  End Sub
+  
+  Private Sub SetTextToControl(control As Control, msg As String)
+    If control.InvokeRequired Then
+      control.Invoke(
+        New SetControlAndStringDelegate(AddressOf SetTextToControl),
+        New Object() { control, msg })
+    Else
+      control.Text = msg
+    End If    
   End Sub
   
   Private Sub ClearAddressView()
@@ -387,8 +397,7 @@ Public Partial Class MainForm
   Private Delegate Sub NoArgumentsDelegate()
   Private Delegate Sub SetStringDelegate(str As String)
   Private Delegate Sub SetAddrDelegate(addr As AddressWords)
+  Private Delegate Sub SetControlAndStringDelegate(control As Control, str As String)
   Private Delegate Sub SetExceptionDelegate(ex As Exception)
-  
-  
 
 End Class

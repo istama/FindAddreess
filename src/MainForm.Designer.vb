@@ -440,6 +440,7 @@ Partial Class MainForm
     Me.btnSearchForPostOffice.TabIndex = 25
     Me.btnSearchForPostOffice.Text = "検索"
     Me.btnSearchForPostOffice.UseVisualStyleBackColor = true
+    AddHandler Me.btnSearchForPostOffice.Click, AddressOf Me.BtnSearchForPostOfficeClick
     '
     'label19
     '
