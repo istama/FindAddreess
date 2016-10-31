@@ -38,4 +38,24 @@ Public Class TestSearcher
     
     Return res
   End Function
+  
+  <Test> _
+  Public Sub TestRunForAccessPostOffice
+    Dim addr1 As New AddressWords("", Forward, "", Forward, "", Forward, "", Forward, "四谷駅", Forward)
+    Dim res1 As List(Of AddressWords) = AccessPostOffice(addr1)
+    Assert.AreEqual(1, res1.Count)
+    Assert.AreEqual("160", res1(0).ZipcodeHeader(0))
+    Assert.AreEqual("東京都新宿区本塩町3-3", res1(0).TownArea(0))
+    Assert.AreEqual("四谷駅前郵便局",res1(0).Office(0))
+  End Sub
+  
+  Private Function AccessPostOffice(addr As AddressWords) As List(Of AddressWords)
+    Dim res As New List(Of AddressWords)
+    Dim s As New Searcher(addr, AddressType.PostOffice)
+    s.Run(Sub(a) res.Add(a))
+    s.Wait
+    
+    Return res
+  End Function
+  
 End Class
