@@ -92,6 +92,7 @@ Public Partial Class MainForm
   Sub InitAllCbox()
     InitCboxOfMatchingMode(Me.cboxMatchingModeOfCity)
     InitCboxOfMatchingMode(Me.cboxMatchingModeOfTownArea)
+    InitCboxOfMatchingMode(Me.cboxMatchingModeOfPostOffice)
   End Sub
   
   ''' <summary>
