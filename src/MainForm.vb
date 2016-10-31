@@ -11,6 +11,7 @@ Imports System.Threading
 Public Partial Class MainForm
   Private Const COLUMN_NAME_ZIP As String     = "郵便番号"
   Private Const COLUMN_NAME_ADDRESS As String = "住所"
+  Private Const COLUMN_NAME_OFFICE As String  = "事業所"
   
   ''' このアプリケーションのバージョン番号	
   Private version As Version
@@ -210,7 +211,7 @@ Public Partial Class MainForm
   End Sub
   
   Private Sub Search(addrWords As AddressWords, addrType As AddressType)
-    ClearAddressView()
+    ClearAddressView(addrType)
     
     Me.searcher = New Searcher(addrWords, addrType)
     
@@ -229,7 +230,11 @@ Public Partial Class MainForm
     ' 検索開始
     searcher.Run(
       Sub(addr)
-        AddAddressToTable(addr)
+        If addrType = AddressType.Address Then
+          AddAddressToTable(addr)
+        Else
+          AddAddressAndOfficeToTable(addr)
+        End If
       End Sub,
       Sub(tasks)
         UpdateAddressView()
@@ -291,14 +296,22 @@ Public Partial Class MainForm
     End If    
   End Sub
   
-  Private Sub ClearAddressView()
+  Private Sub ClearAddressView(addrType As AddressType)
     If Me.dataGridView1.InvokeRequired Then
       Me.dataGridView1.Invoke(
-        New NoArgumentsDelegate(AddressOf ClearAddressView))
+        New SetAddressTypeDelegate(AddressOf ClearAddressView),
+        New Object() { addrType })
     Else
-      Me.addressDataTable = CreateAddressTable()
-      Me.dataGridView1.DataSource = Me.addressDataTable
-      Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      If addrType = AddressType.Address Then
+        Me.addressDataTable = CreateAddressTable()
+        Me.dataGridView1.DataSource = Me.addressDataTable
+        Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      Else
+        Me.addressDataTable = CreateAddressAndOfficeTable()
+        Me.dataGridView1.DataSource = Me.addressDataTable
+        Me.dataGridView1.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      End If
+      
       Me.dataGridView1.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders)
     End If
   End Sub
@@ -335,6 +348,15 @@ Public Partial Class MainForm
     
     Return table
   End Function
+
+  Private Function CreateAddressAndOfficeTable() As DataTable
+    Dim table As New DataTable
+    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_OFFICE))
+    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_ZIP))
+    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_ADDRESS))
+    
+    Return table
+  End Function
   
   Private Function CreateAddressTableColumn(colName As String) As DataColumn
     Dim col As New DataColumn
@@ -352,6 +374,24 @@ Public Partial Class MainForm
         New Object() { addr })
     Else
       Dim row As DataRow = Me.addressDataTable.NewRow
+      row(COLUMN_NAME_ZIP)     = addr.Zipcode(0)
+      row(COLUMN_NAME_ADDRESS) = addr.FullName
+      Me.addressDataTable.Rows.Add(row)
+      
+      Me.lblFoundAddr.Text   = addr.FullName
+      Me.lblResultCount.Text = Me.addressDataTable.Rows.Count.ToString & " 件"
+      Me.dataGridView1.Update
+    End If
+  End Sub
+  
+  Private Sub AddAddressAndOfficeToTable(addr As AddressWords)
+    If Me.dataGridView1.InvokeRequired Then
+      Me.dataGridView1.Invoke(
+        New SetAddrDelegate(AddressOf AddAddressAndOfficeToTable),
+        New Object() { addr })
+    Else
+      Dim row As DataRow = Me.addressDataTable.NewRow
+      row(COLUMN_NAME_OFFICE)  = addr.Office(0)
       row(COLUMN_NAME_ZIP)     = addr.Zipcode(0)
       row(COLUMN_NAME_ADDRESS) = addr.FullName
       Me.addressDataTable.Rows.Add(row)
@@ -389,6 +429,7 @@ Public Partial Class MainForm
   Private Delegate Sub SetStringDelegate(str As String)
   Private Delegate Sub SetAddrDelegate(addr As AddressWords)
   Private Delegate Sub SetControlAndStringDelegate(control As Control, str As String)
+  Private Delegate Sub SetAddressTypeDelegate(addrType As AddressType)
   Private Delegate Sub SetExceptionDelegate(ex As Exception)
 
 End Class
