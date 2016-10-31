@@ -49,7 +49,8 @@ Public Structure DatabaseAccessParameter
     ElseIf AllowToSearchByFuzzyZipcode(words)
       Return AddressItem.Zipcode
     Else
-      Return AddressItem.Prefecture
+      'Return AddressItem.Prefecture
+      Return AddressItem.Zipcode
 '      Throw New ArgumentException(
 '        "この検索条件では検索に非常に時間がかかってしまいます。" & vbCrLf &
 '        "検索条件を指定しなおしてください。" & vbCrLf & vbCrLf &
@@ -133,8 +134,16 @@ Public Structure DatabaseAccessParameter
   End Function
   
   Private Function FileNameRegexpOfZipcode(words As AddressWords) As String
-    Dim word As String = words.ZipcodeHeader(0)
-    Return word.PadRight(3, "."c)
+    Dim word As String = String.Empty
+    If words.ZipcodeHeader.Count > 0 Then
+      word = words.ZipcodeHeader(0)
+    End If
+    
+    If word <> String.Empty Then
+      Return word.PadRight(3, "."c)
+    Else
+      Return "^.*"      
+    End If
   End Function
   
   Private Function FileNameRegexpOfPrefecture(words As AddressWords) As String
