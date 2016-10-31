@@ -175,7 +175,7 @@ Partial Class MainForm
     Me.dataGridView1.Location = New System.Drawing.Point(12, 218)
     Me.dataGridView1.Name = "dataGridView1"
     Me.dataGridView1.RowTemplate.Height = 21
-    Me.dataGridView1.Size = New System.Drawing.Size(405, 209)
+    Me.dataGridView1.Size = New System.Drawing.Size(530, 209)
     Me.dataGridView1.TabIndex = 10
     Me.dataGridView1.TabStop = false
     AddHandler Me.dataGridView1.EditingControlShowing, AddressOf Me.dataGridView1_EditingControlShowing
@@ -212,7 +212,7 @@ Partial Class MainForm
     'lblResultCount
     '
     Me.lblResultCount.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-    Me.lblResultCount.Location = New System.Drawing.Point(356, 436)
+    Me.lblResultCount.Location = New System.Drawing.Point(481, 436)
     Me.lblResultCount.Name = "lblResultCount"
     Me.lblResultCount.Size = New System.Drawing.Size(62, 12)
     Me.lblResultCount.TabIndex = 15
@@ -223,7 +223,7 @@ Partial Class MainForm
     '
     Me.label9.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
     Me.label9.AutoSize = true
-    Me.label9.Location = New System.Drawing.Point(297, 436)
+    Me.label9.Location = New System.Drawing.Point(422, 436)
     Me.label9.Name = "label9"
     Me.label9.Size = New System.Drawing.Size(53, 12)
     Me.label9.TabIndex = 16
@@ -273,7 +273,7 @@ Partial Class MainForm
     Me.tabControl1.Location = New System.Drawing.Point(9, 8)
     Me.tabControl1.Name = "tabControl1"
     Me.tabControl1.SelectedIndex = 0
-    Me.tabControl1.Size = New System.Drawing.Size(412, 204)
+    Me.tabControl1.Size = New System.Drawing.Size(537, 204)
     Me.tabControl1.TabIndex = 22
     Me.tabControl1.TabStop = false
     AddHandler Me.tabControl1.SelectedIndexChanged, AddressOf Me.tabControlIndexChanged
@@ -300,7 +300,7 @@ Partial Class MainForm
     Me.tabPage1.Location = New System.Drawing.Point(4, 22)
     Me.tabPage1.Name = "tabPage1"
     Me.tabPage1.Padding = New System.Windows.Forms.Padding(3)
-    Me.tabPage1.Size = New System.Drawing.Size(404, 178)
+    Me.tabPage1.Size = New System.Drawing.Size(529, 178)
     Me.tabPage1.TabIndex = 0
     Me.tabPage1.Text = "住所"
     '
@@ -457,7 +457,7 @@ Partial Class MainForm
     '
     Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
     Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-    Me.ClientSize = New System.Drawing.Size(430, 457)
+    Me.ClientSize = New System.Drawing.Size(555, 457)
     Me.Controls.Add(Me.tabControl1)
     Me.Controls.Add(Me.lblFoundAddr)
     Me.Controls.Add(Me.lblMessage)
