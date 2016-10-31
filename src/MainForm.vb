@@ -4,6 +4,8 @@
 Imports System.IO
 Imports System.Data
 'Imports System.Linq
+Imports System.Threading.Tasks
+Imports System.Collections.Concurrent
 Imports Common.Text
 Imports Common.Extensions
 Imports System.Threading
@@ -204,7 +206,16 @@ Public Partial Class MainForm
         Me.running = True
         SetTextToControl(button, "停止")
         SetTextToControl(Me.lblMessage, "検索中です...")
-        Search(addrWords, addrType)
+        AsyncSearch(
+          addrWords,
+          addrType, 
+          Sub(tasks)
+            UpdateAddressView()
+            SetTextToControl(button, "検索")
+            SetTextToControl(Me.lblMessage, "検索終了")
+            SetTextToControl(Me.lblFoundAddr, "")
+            Me.running = False
+          End Sub)
       Else
         Halt()
       End If
@@ -215,7 +226,10 @@ Public Partial Class MainForm
     End Try        
   End Sub
   
-  Private Sub Search(addrWords As AddressWords, addrType As AddressType)
+  ''' <summary>
+  ''' 非同期で住所検索する。
+  ''' </summary>
+  Private Sub AsyncSearch(addrWords As AddressWords, addrType As AddressType, endCallback As Action(Of ConcurrentQueue(Of Task)))
     ClearAddressView(addrType)
     
     Me.searcher = New Searcher(addrWords, addrType)
@@ -241,14 +255,7 @@ Public Partial Class MainForm
           AddAddressAndOfficeToTable(addr)
         End If
       End Sub,
-      Sub(tasks)
-        UpdateAddressView()
-        SetTextToControl(Me.btnSearch, "検索")
-        SetTextToControl(Me.btnSearchForPostOffice, "検索")
-        SetTextToControl(Me.lblMessage, "検索終了")
-        SetTextToControl(Me.lblFoundAddr, "")
-        Me.running = False
-      End Sub)
+      endCallback)
   End Sub
   
   Private Sub Halt()
