@@ -374,9 +374,9 @@ Partial Class MainForm
     Me.label13.AutoSize = true
     Me.label13.Location = New System.Drawing.Point(15, 66)
     Me.label13.Name = "label13"
-    Me.label13.Size = New System.Drawing.Size(53, 12)
+    Me.label13.Size = New System.Drawing.Size(29, 12)
     Me.label13.TabIndex = 22
-    Me.label13.Text = "都道府県"
+    Me.label13.Text = "住所"
     '
     'label14
     '
