@@ -92,6 +92,7 @@ Public Partial Class MainForm
   Sub InitAllCbox()
     InitCboxOfMatchingMode(Me.cboxMatchingModeOfCity)
     InitCboxOfMatchingMode(Me.cboxMatchingModeOfTownArea)
+    InitCboxOfMatchingMode(Me.cboxMatchingModeOfAddress)
     InitCboxOfMatchingMode(Me.cboxMatchingModeOfPostOffice)
   End Sub
   
@@ -276,7 +277,7 @@ Public Partial Class MainForm
         zip,          MatchingMode.Forward,
         String.Empty, MatchingMode.Forward,
         String.Empty, MatchingMode.Forward,
-        pre,          MatchingMode.Forward,
+        pre,          DirectCast(Me.cboxMatchingModeOfAddress.SelectedValue, MatchingMode),
         office,       DirectCast(Me.cboxMatchingModeOfPostOffice.SelectedValue, MatchingMode))
   End Function
   

@@ -42,7 +42,6 @@ Partial Class MainForm
     Me.label5 = New System.Windows.Forms.Label()
     Me.btnSearch = New System.Windows.Forms.Button()
     Me.label6 = New System.Windows.Forms.Label()
-    Me.label7 = New System.Windows.Forms.Label()
     Me.lblResultCount = New System.Windows.Forms.Label()
     Me.label9 = New System.Windows.Forms.Label()
     Me.label10 = New System.Windows.Forms.Label()
@@ -51,7 +50,9 @@ Partial Class MainForm
     Me.lblFoundAddr = New System.Windows.Forms.Label()
     Me.tabControl1 = New System.Windows.Forms.TabControl()
     Me.tabPage1 = New System.Windows.Forms.TabPage()
+    Me.label7 = New System.Windows.Forms.Label()
     Me.tabPage2 = New System.Windows.Forms.TabPage()
+    Me.cboxMatchingModeOfAddress = New System.Windows.Forms.ComboBox()
     Me.tboxPostOffice = New System.Windows.Forms.TextBox()
     Me.label8 = New System.Windows.Forms.Label()
     Me.tboxZipcodeOfPostOffice = New System.Windows.Forms.TextBox()
@@ -60,7 +61,6 @@ Partial Class MainForm
     Me.label14 = New System.Windows.Forms.Label()
     Me.tboxPrefectureOfPostOffice = New System.Windows.Forms.TextBox()
     Me.label15 = New System.Windows.Forms.Label()
-    Me.label17 = New System.Windows.Forms.Label()
     Me.label18 = New System.Windows.Forms.Label()
     Me.cboxMatchingModeOfPostOffice = New System.Windows.Forms.ComboBox()
     Me.btnSearchForPostOffice = New System.Windows.Forms.Button()
@@ -209,15 +209,6 @@ Partial Class MainForm
     Me.label6.TabIndex = 13
     Me.label6.Text = "前方一致"
     '
-    'label7
-    '
-    Me.label7.AutoSize = true
-    Me.label7.Location = New System.Drawing.Point(246, 66)
-    Me.label7.Name = "label7"
-    Me.label7.Size = New System.Drawing.Size(53, 12)
-    Me.label7.TabIndex = 14
-    Me.label7.Text = "前方一致"
-    '
     'lblResultCount
     '
     Me.lblResultCount.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
@@ -284,7 +275,7 @@ Partial Class MainForm
     Me.tabControl1.SelectedIndex = 0
     Me.tabControl1.Size = New System.Drawing.Size(412, 204)
     Me.tabControl1.TabIndex = 22
-    Me.tabControl1.TabStop = False
+    Me.tabControl1.TabStop = false
     AddHandler Me.tabControl1.SelectedIndexChanged, AddressOf Me.tabControlIndexChanged
     '
     'tabPage1
@@ -313,9 +304,19 @@ Partial Class MainForm
     Me.tabPage1.TabIndex = 0
     Me.tabPage1.Text = "住所"
     '
+    'label7
+    '
+    Me.label7.AutoSize = true
+    Me.label7.Location = New System.Drawing.Point(246, 66)
+    Me.label7.Name = "label7"
+    Me.label7.Size = New System.Drawing.Size(53, 12)
+    Me.label7.TabIndex = 14
+    Me.label7.Text = "前方一致"
+    '
     'tabPage2
     '
     Me.tabPage2.BackColor = System.Drawing.Color.Transparent
+    Me.tabPage2.Controls.Add(Me.cboxMatchingModeOfAddress)
     Me.tabPage2.Controls.Add(Me.tboxPostOffice)
     Me.tabPage2.Controls.Add(Me.label8)
     Me.tabPage2.Controls.Add(Me.tboxZipcodeOfPostOffice)
@@ -324,7 +325,6 @@ Partial Class MainForm
     Me.tabPage2.Controls.Add(Me.label14)
     Me.tabPage2.Controls.Add(Me.tboxPrefectureOfPostOffice)
     Me.tabPage2.Controls.Add(Me.label15)
-    Me.tabPage2.Controls.Add(Me.label17)
     Me.tabPage2.Controls.Add(Me.label18)
     Me.tabPage2.Controls.Add(Me.cboxMatchingModeOfPostOffice)
     Me.tabPage2.Controls.Add(Me.btnSearchForPostOffice)
@@ -335,6 +335,16 @@ Partial Class MainForm
     Me.tabPage2.Size = New System.Drawing.Size(404, 178)
     Me.tabPage2.TabIndex = 1
     Me.tabPage2.Text = "郵便局"
+    '
+    'cboxMatchingModeOfAddress
+    '
+    Me.cboxMatchingModeOfAddress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+    Me.cboxMatchingModeOfAddress.FormattingEnabled = true
+    Me.cboxMatchingModeOfAddress.Items.AddRange(New Object() {"前方一致", "完全一致", "部分一致"})
+    Me.cboxMatchingModeOfAddress.Location = New System.Drawing.Point(246, 62)
+    Me.cboxMatchingModeOfAddress.Name = "cboxMatchingModeOfAddress"
+    Me.cboxMatchingModeOfAddress.Size = New System.Drawing.Size(102, 20)
+    Me.cboxMatchingModeOfAddress.TabIndex = 24
     '
     'tboxPostOffice
     '
@@ -405,15 +415,6 @@ Partial Class MainForm
     Me.label15.TabIndex = 26
     Me.label15.Text = "郵便局名"
     '
-    'label17
-    '
-    Me.label17.AutoSize = true
-    Me.label17.Location = New System.Drawing.Point(246, 66)
-    Me.label17.Name = "label17"
-    Me.label17.Size = New System.Drawing.Size(53, 12)
-    Me.label17.TabIndex = 33
-    Me.label17.Text = "前方一致"
-    '
     'label18
     '
     Me.label18.AutoSize = true
@@ -431,14 +432,14 @@ Partial Class MainForm
     Me.cboxMatchingModeOfPostOffice.Location = New System.Drawing.Point(246, 87)
     Me.cboxMatchingModeOfPostOffice.Name = "cboxMatchingModeOfPostOffice"
     Me.cboxMatchingModeOfPostOffice.Size = New System.Drawing.Size(102, 20)
-    Me.cboxMatchingModeOfPostOffice.TabIndex = 24
+    Me.cboxMatchingModeOfPostOffice.TabIndex = 25
     '
     'btnSearchForPostOffice
     '
     Me.btnSearchForPostOffice.Location = New System.Drawing.Point(246, 111)
     Me.btnSearchForPostOffice.Name = "btnSearchForPostOffice"
     Me.btnSearchForPostOffice.Size = New System.Drawing.Size(102, 25)
-    Me.btnSearchForPostOffice.TabIndex = 25
+    Me.btnSearchForPostOffice.TabIndex = 26
     Me.btnSearchForPostOffice.Text = "検索"
     Me.btnSearchForPostOffice.UseVisualStyleBackColor = true
     AddHandler Me.btnSearchForPostOffice.Click, AddressOf Me.BtnSearchForPostOfficeClick
@@ -476,11 +477,12 @@ Partial Class MainForm
     Me.ResumeLayout(false)
     Me.PerformLayout
   End Sub
+  Private label7 As System.Windows.Forms.Label
+  Private cboxMatchingModeOfAddress As System.Windows.Forms.ComboBox
   Private label19 As System.Windows.Forms.Label
   Private btnSearchForPostOffice As System.Windows.Forms.Button
   Private cboxMatchingModeOfPostOffice As System.Windows.Forms.ComboBox
   Private label18 As System.Windows.Forms.Label
-  Private label17 As System.Windows.Forms.Label
   Private label15 As System.Windows.Forms.Label
   Private tboxPrefectureOfPostOffice As System.Windows.Forms.TextBox
   Private label14 As System.Windows.Forms.Label
@@ -498,7 +500,6 @@ Partial Class MainForm
   Private label10 As System.Windows.Forms.Label
   Private label9 As System.Windows.Forms.Label
   Private lblResultCount As System.Windows.Forms.Label
-  Private label7 As System.Windows.Forms.Label
   Private label6 As System.Windows.Forms.Label
   Private btnSearch As System.Windows.Forms.Button
   Private label5 As System.Windows.Forms.Label
