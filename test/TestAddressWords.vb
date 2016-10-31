@@ -50,12 +50,12 @@ Public Class TestAddressWords
     
     Dim addr2 As AddressWords = AddressWords.CreateFromCsvOfAddressTextAndOffice("1000001,東京都千代田区,丸の内オフィス")
     Assert.AreEqual("1000001",       addr2.Zipcode(0))
-    Assert.AreEqual("東京都千代田区", addr2.Prefecture(0))
+    Assert.AreEqual("東京都千代田区", addr2.TownArea(0))
     Assert.AreEqual("丸の内オフィス",    addr2.Office(0))
     
     Dim addr3 As AddressWords = AddressWords.CreateFromCsvOfZipAndOffice("1600001,新宿ビル")
-    Assert.AreEqual("1600001",       addr3.Zipcode(0))
-    Assert.AreEqual("新宿ビル",    addr3.Office(0))
+    Assert.AreEqual("1600001", addr3.Zipcode(0))
+    Assert.AreEqual("新宿ビル", addr3.Office(0))
   End Sub
   
   <Test> _

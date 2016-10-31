@@ -92,7 +92,7 @@ Public Structure AddressWords
   ''' </summary>
   Public Shared Function CreateFromCsvOfAddressTextAndOffice(csv As String) As AddressWords
     Dim fields As String() = csv.Split(","c)
-    Return New AddressWords(fields(0), fields(1), "", "", fields(2))
+    Return New AddressWords(fields(0), "", "", fields(1), fields(2))
   End Function
   
   ''' <summary>
