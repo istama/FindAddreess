@@ -261,20 +261,6 @@ Public Partial Class MainForm
         office,       DirectCast(Me.cboxMatchingModeOfPostOffice.SelectedValue, MatchingMode))
   End Function
   
-
-  
-
-  
-  Private Sub SetLblFoundAddr(msg As String)
-    If Me.lblFoundAddr.InvokeRequired Then
-      Me.lblFoundAddr.Invoke(
-        New SetStringDelegate(AddressOf SetLblFoundAddr),
-        New Object() { msg })
-    Else
-      Me.lblFoundAddr.Text = msg
-    End If
-  End Sub
-  
   Private Sub SetTextToControl(control As Control, msg As String)
     If control.InvokeRequired Then
       control.Invoke(
