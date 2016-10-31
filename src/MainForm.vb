@@ -172,6 +172,23 @@ Public Partial Class MainForm
     End Try
   End Sub
   
+  Sub BtnSearchForPostOfficeClick(sender As Object, e As EventArgs)
+    Try
+      If Not Me.running Then
+        Me.running = True
+        'SetBtnSearchName("停止")
+        SetLblMessage("検索中です...")
+        Search(CreatePostOfficeAddressWords(), AddressType.PostOffice)
+      Else
+        Halt()
+      End If
+    Catch ex As Exception
+      MsgBox.ShowError(ex)
+      Me.running = False
+      'SetBtnSearchName("検索")
+    End Try    
+  End Sub
+  
   Private Sub Search(addrWords As AddressWords, addrType As AddressType)
     ClearAddressView()
     
@@ -223,6 +240,24 @@ Public Partial Class MainForm
         pre,  MatchingMode.Forward,
         city, DirectCast(Me.cboxMatchingModeOfCity.SelectedValue, MatchingMode),
         town, DirectCast(Me.cboxMatchingModeOfTownArea.SelectedValue, MatchingMode))
+  End Function
+  
+  Private Function CreatePostOfficeAddressWords() As AddressWords
+    Dim zip As String = Me.tboxZipcodeOfPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
+    Dim pre As String = Me.tboxPrefectureOfPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
+    Dim office As String = Me.tboxPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
+    
+    If zip = String.Empty AndAlso pre = String.Empty AndAlso office = String.Empty Then
+      Throw New ArgumentException("検索ワードが入力されていません。")
+    End If
+    
+    Return _
+      New AddressWords(
+      zip,          MatchingMode.Forward,
+      String.Empty, MatchingMode.Forward,
+      String.Empty, MatchingMode.Forward,
+      pre,          MatchingMode.Forward,
+      office,       DirectCast(Me.cboxMatchingModeOfPostOffice.SelectedValue, MatchingMode))
   End Function
   
   Private Sub SetBtnSearchName(name As String)
@@ -354,4 +389,6 @@ Public Partial Class MainForm
   Private Delegate Sub SetAddrDelegate(addr As AddressWords)
   Private Delegate Sub SetExceptionDelegate(ex As Exception)
   
+  
+
 End Class
