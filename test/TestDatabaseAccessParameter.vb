@@ -39,10 +39,16 @@ Public Class TestDatabaseAccessParameter
     Assert.AreEqual(AddressItem.Zipcode, param5.SearchingAddressItem)
     Assert.AreEqual(".6.", param5.FileNameRegexp)
     
+    ' 事業所がアクセス先になる
+    Dim addr6 As AddressWords = AddressWords.CreateFromCsvOfFullAddressAndOffice("16,東京都,新宿区,西.宿,コクーンビル")
+    Dim param6 As New DatabaseAccessParameter(addr6)
+    Assert.AreEqual(AddressItem.Office, param6.SearchingAddressItem)
+    Assert.AreEqual(AscW("コ").ToString.Substring(0, 3), param6.FileNameRegexp)
+    
     ' 例外
     Try
-      Dim addr6 As New AddressWords("...", Forward, "", Forward, "西宿区", Backward, ".新宿", Perfection)
-      Dim param6 As New DatabaseAccessParameter(addr6)
+      Dim addrEx As New AddressWords("...", Forward, "", Forward, "西宿区", Backward, ".新宿", Perfection)
+      Dim paramEx As New DatabaseAccessParameter(addrEx)
       Assert.True(False)
     Catch ex As Exception
     End Try 
