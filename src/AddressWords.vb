@@ -21,16 +21,11 @@ Public Structure AddressWords
   Private ReadOnly _office As Common.Text.MatchingText
   
   Public Sub New(
-    zipcode As String,
-    matchingModeOfZipcode As MatchingMode,
-    prefecture As String,
-    matchingModeOfPrefecture As MatchingMode,
-    city As String,
-    matchingModeOfCity As MatchingMode,
-    townArea As String,
-    matchingModeOfTownArea As MatchingMode,
-    office As String,
-    matchingModeOfOffice As MatchingMode)
+    zipcode    As String, matchingModeOfZipcode    As MatchingMode,
+    prefecture As String, matchingModeOfPrefecture As MatchingMode,
+    city       As String, matchingModeOfCity       As MatchingMode,
+    townArea   As String, matchingModeOfTownArea   As MatchingMode,
+    office     As String, matchingModeOfOffice     As MatchingMode)
     If zipcode    Is Nothing Then Throw New NullReferenceException("zipcode is null")
     If prefecture Is Nothing Then Throw New NullReferenceException("prefecture is null")
     If city       Is Nothing Then Throw New NullReferenceException("city is null")
@@ -45,14 +40,10 @@ Public Structure AddressWords
   End Sub
   
   Public Sub New(
-    zipcode As String,
-    matchingModeOfZipcode As MatchingMode,
-    prefecture As String,
-    matchingModeOfPrefecture As MatchingMode,
-    city As String,
-    matchingModeOfCity As MatchingMode,
-    townArea As String,
-    matchingModeOfTownArea As MatchingMode)
+    zipcode    As String, matchingModeOfZipcode    As MatchingMode,
+    prefecture As String, matchingModeOfPrefecture As MatchingMode,
+    city       As String, matchingModeOfCity       As MatchingMode,
+    townArea   As String, matchingModeOfTownArea   As MatchingMode)
     Me.New(
       zipcode,      matchingModeOfZipcode,
       prefecture,   matchingModeOfPrefecture,
