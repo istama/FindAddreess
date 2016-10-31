@@ -4,6 +4,7 @@
 Imports System.Threading.Tasks
 Imports System.Collections.Concurrent
 Imports System.Linq
+Imports Common.IO
 
 Public Class Searcher
   Private searchingWords As AddressWords
@@ -16,6 +17,7 @@ Public Class Searcher
   Public Sub New(words As AddressWords, addrType As AddressType)
     Me.searchingWords = words
     Me.addrType       = addrType
+    Log.SetFilePath("log.txt")
   End Sub
   
   Public Function IsRunning As Boolean
@@ -53,7 +55,7 @@ Public Class Searcher
     Me.running = True
     Search(Me.searchingWords, callback)
     
-    Task.Factory.StartNew(Sub() FinallyTask(finallyCallback))    
+    Task.Factory.StartNew(Sub() FinallyTask(finallyCallback))
   End Sub
   
   Private Sub Search(words As AddressWords, callback As Action(Of AddressWords))
@@ -81,7 +83,7 @@ Public Class Searcher
           If fields.Count > 0 AndAlso foundZipList.Contains(fields(0)) Then Return
           
           Try
-            Dim addr As AddressWords = CreateAddressWords(csv, param.SearchingAddressItem)
+            Dim addr As AddressWords = CreateAddressWords(csv, Me.addrType, param.SearchingAddressItem)
             ' 取得した住所が検索ワードにかかるか判定する
             If Me.searchingWords.Matching(addr) Then
               ' 既に取得した住所を処理しないように、郵便番号をリストに格納しておく
@@ -121,15 +123,21 @@ Public Class Searcher
     End If
   End Sub
   
-  Private Function CreateAddressWords(csv As String, searchedAddressItem As AddressItem) As AddressWords
+  Private Function CreateAddressWords(csv As String, addrType As AddressType, searchedAddressItem As AddressItem) As AddressWords
     If searchedAddressItem = AddressItem.Zipcode Then
-      Return AddressWords.CreateFromCsvOfFullAddress(csv)
+      If addrType = AddressType.Address Then
+        Return AddressWords.CreateFromCsvOfFullAddress(csv)
+      Else
+        Return AddressWords.CreateFromCsvOfAddressTextAndOffice(csv)        
+      End If
     ElseIf searchedAddressItem = AddressItem.Prefecture Then
       Return AddressWords.CreateFromCsvOfFullAddress(csv & ",,,")
     ElseIf searchedAddressItem = AddressItem.City
       Return AddressWords.CreateFromCsvOfZipAndCity(csv)
-    Else
+    ElseIf searchedAddressItem = AddressItem.TownArea
       Return AddressWords.CreateFromCsvOfZipAndTownArea(csv)
+    Else
+      Return AddressWords.CreateFromCsvOfZipAndOffice(csv)
     End If
   End Function
 End Class
