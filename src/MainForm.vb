@@ -263,15 +263,7 @@ Public Partial Class MainForm
   
 
   
-  Private Sub SetLblMessage(msg As String)
-    If Me.lblMessage.InvokeRequired Then
-      Me.lblMessage.Invoke(
-        New SetStringDelegate(AddressOf SetLblMessage),
-        New Object() { msg })
-    Else
-      Me.lblMessage.Text = msg
-    End If
-  End Sub
+
   
   Private Sub SetLblFoundAddr(msg As String)
     If Me.lblFoundAddr.InvokeRequired Then
