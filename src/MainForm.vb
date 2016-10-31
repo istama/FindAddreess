@@ -181,39 +181,38 @@ Public Partial Class MainForm
       e.KeyChar = "'"c OrElse e.KeyChar = "`"c OrElse e.KeyChar = "\"c
   End Sub
   
-  
+  ''' <summary>
+  ''' 住所検索ボタンが押されたときのイベントハンドラ
+  ''' </summary>
   Sub BtnSearchClick(sender As Object, e As EventArgs)
-    Try
-      If Not Me.running Then
-        Me.running = True
-        SetTextToControl(Me.btnSearch, "停止")
-        SetTextToControl(Me.lblMessage, "検索中です...")
-        Search(CreateAddressWords(), AddressType.Address)
-      Else
-        Halt()
-      End If
-    Catch ex As Exception
-      MsgBox.ShowError(ex)
-      Me.running = False
-      SetTextToControl(Me.btnSearch, "検索")
-    End Try
+    Search(Me.btnSearch, CreateAddressWords(), AddressType.Address)
   End Sub
   
+  ''' <summary>
+  ''' 郵便局検索ボタンが押されたときのイベントハンドラ
+  ''' </summary>
   Sub BtnSearchForPostOfficeClick(sender As Object, e As EventArgs)
+    Search(Me.btnSearchForPostOffice, CreatePostOfficeAddressWords(), AddressType.PostOffice)
+  End Sub
+  
+  ''' <summary>
+  ''' 住所検索オブジェクトを起動する。
+  ''' </summary>
+  Private Sub Search(button As Button, addrWords As AddressWords, addrType As AddressType)
     Try
       If Not Me.running Then
         Me.running = True
-        SetTextToControl(Me.btnSearchForPostOffice, "停止")
+        SetTextToControl(button, "停止")
         SetTextToControl(Me.lblMessage, "検索中です...")
-        Search(CreatePostOfficeAddressWords(), AddressType.PostOffice)
+        Search(addrWords, addrType)
       Else
         Halt()
       End If
     Catch ex As Exception
       MsgBox.ShowError(ex)
       Me.running = False
-      SetTextToControl(Me.btnSearchForPostOffice, "検索")
-    End Try    
+      SetTextToControl(button, "検索")
+    End Try        
   End Sub
   
   Private Sub Search(addrWords As AddressWords, addrType As AddressType)
