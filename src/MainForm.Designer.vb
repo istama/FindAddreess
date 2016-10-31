@@ -284,7 +284,8 @@ Partial Class MainForm
     Me.tabControl1.SelectedIndex = 0
     Me.tabControl1.Size = New System.Drawing.Size(412, 204)
     Me.tabControl1.TabIndex = 22
-    Me.tabControl1.TabStop = false
+    Me.tabControl1.TabStop = False
+    AddHandler Me.tabControl1.SelectedIndexChanged, AddressOf Me.tabControlIndexChanged
     '
     'tabPage1
     '

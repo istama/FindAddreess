@@ -45,7 +45,7 @@ Public Partial Class MainForm
       InitAllCbox()
       LoadTitleBar()
       
-      Me.AcceptButton = Me.btnSearch
+      ExchangeAcceptButton()
     Catch ex As Exception
       MsgBox.ShowError(ex)
     End Try
@@ -133,6 +133,25 @@ Public Partial Class MainForm
       Return "後方一致"
     End If
   End Function
+  
+  ''' <summary>
+  ''' Enterキーを押したときに押されるボタンを切り替える。
+  ''' </summary>
+  Private Sub ExchangeAcceptButton()
+    Dim selectedTabPage As TabPage = Me.tabControl1.SelectedTab
+    If selectedTabPage.Text = "住所" Then
+      Me.AcceptButton = Me.btnSearch
+    ElseIf selectedTabPage.Text = "郵便局"
+      Me.AcceptButton = Me.btnSearchForPostOffice
+    End If
+  End Sub
+  
+  ''' <summary>
+  ''' タブのページが切り替わったときのイベントハンドラ
+  ''' </summary>
+  Sub tabControlIndexChanged(sender As Object, e As EventArgs)
+    ExchangeAcceptButton()
+  End Sub
   
   ''' 郵便番号が入力されたときのイベントハンドラ
   Sub TboxZipcodeKeyPress(sender As Object, e As KeyPressEventArgs)
