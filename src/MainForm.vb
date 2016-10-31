@@ -8,6 +8,9 @@ Imports Common.Text
 Imports Common.Extensions
 Imports System.Threading
 
+''' <summary>
+''' メインフォーム。
+''' </summary>
 Public Partial Class MainForm
   Private Const COLUMN_NAME_ZIP As String     = "郵便番号"
   Private Const COLUMN_NAME_ADDRESS As String = "住所"
@@ -79,7 +82,10 @@ Public Partial Class MainForm
 			End If
 		End If
 	End Sub
-
+	
+	''' <summary>
+	''' データベースへアクセスするクラスを初期化する。
+	''' </summary>
   Sub InitDatabaseAccessor()
     Dim path As String = ""
     If Me.properties.TryGetAddressDBDir(path) Then
