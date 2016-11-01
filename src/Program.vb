@@ -1,10 +1,5 @@
 ﻿'
-' SharpDevelopによって生成
-' ユーザ: Blue
 ' 日付: 2016/10/08
-' 時刻: 22:30
-' 
-' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Imports Microsoft.VisualBasic.ApplicationServices
 
