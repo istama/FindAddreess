@@ -29,7 +29,7 @@ Public Partial Class MainForm
   Private running As Boolean
   
   ''' 検索した住所情報を格納するテーブル
-  Private addressDataTable As DataTable
+'  Private addressDataTable As DataTable
   
   Public Sub New()
     Me.InitializeComponent()
@@ -187,14 +187,14 @@ Public Partial Class MainForm
   ''' 住所検索ボタンが押されたときのイベントハンドラ
   ''' </summary>
   Sub BtnSearchClick(sender As Object, e As EventArgs)
-    Search(Me.btnSearch, CreateAddressWords(), AddressType.Address)
+    Search(Me.btnSearch, CreateSearchingWords(), AddressType.Address)
   End Sub
   
   ''' <summary>
   ''' 郵便局検索ボタンが押されたときのイベントハンドラ
   ''' </summary>
   Sub BtnSearchForPostOfficeClick(sender As Object, e As EventArgs)
-    Search(Me.btnSearchForPostOffice, CreatePostOfficeAddressWords(), AddressType.PostOffice)
+    Search(Me.btnSearchForPostOffice, CreateSearchingWordsForPostOffice(), AddressType.PostOffice)
   End Sub
   
   ''' <summary>
@@ -208,9 +208,8 @@ Public Partial Class MainForm
         SetTextToControl(Me.lblMessage, "検索中です...")
         AsyncSearch(
           addrWords,
-          addrType, 
-          Sub(tasks)
-            UpdateAddressView()
+          addrType,
+          Sub(tasks) 
             SetTextToControl(button, "検索")
             SetTextToControl(Me.lblMessage, "検索終了")
             SetTextToControl(Me.lblFoundAddr, "")
@@ -230,7 +229,8 @@ Public Partial Class MainForm
   ''' 非同期で住所検索する。
   ''' </summary>
   Private Sub AsyncSearch(addrWords As AddressWords, addrType As AddressType, endCallback As Action(Of ConcurrentQueue(Of Task)))
-    ClearAddressView(addrType)
+    ' DataGridViewの表示を初期化
+    Dim addrTable As DataTable = InitDataGridViewTable(addrType)
     
     Me.searcher = New Searcher(addrWords, addrType)
     
@@ -248,23 +248,23 @@ Public Partial Class MainForm
     
     ' 検索開始
     searcher.Run(
-      Sub(addr)
-        If addrType = AddressType.Address Then
-          AddAddressToTable(addr)
-        Else
-          AddAddressAndOfficeToTable(addr)
-        End If
-      End Sub,
-      endCallback)
+      Sub(addr) ShowAddress(addr),
+      Sub(task) endCallback(task))
   End Sub
   
+  ''' <summary>
+  ''' 検索を途中で停止させる。
+  ''' </summary>
   Private Sub Halt()
     Me.searcher.Halt()
   End Sub
-    
-  Private Function CreateAddressWords() As AddressWords
-    Dim zip As String  = Me.tboxZipcode.Text.Replace("?"c, ".").Replace("？", "."c)
-    Dim pre As String  = Me.tboxPrefecture.Text.Replace("?"c, ".").Replace("？", "."c)
+  
+  ''' <summary>
+  ''' 検索ワードオブジェクトを生成する。
+  ''' </summary>
+  Private Function CreateSearchingWords() As AddressWords
+    Dim zip  As String = Me.tboxZipcode.Text.Replace("?"c, ".").Replace("？", "."c)
+    Dim pre  As String = Me.tboxPrefecture.Text.Replace("?"c, ".").Replace("？", "."c)
     Dim city As String = Me.tboxCity.Text.Replace("?"c, ".").Replace("？", "."c)
     Dim town As String = Me.tboxTownArea.Text.Replace("?"c, ".").Replace("？", "."c)
     
@@ -280,9 +280,12 @@ Public Partial Class MainForm
         town, DirectCast(Me.cboxMatchingModeOfTownArea.SelectedValue, MatchingMode))
   End Function
   
-  Private Function CreatePostOfficeAddressWords() As AddressWords
-    Dim zip As String = Me.tboxZipcodeOfPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
-    Dim pre As String = Me.tboxPrefectureOfPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
+  ''' <summary>
+  ''' 郵便局検索ワードオブジェクトを生成する。
+  ''' </summary>
+  Private Function CreateSearchingWordsForPostOffice() As AddressWords
+    Dim zip    As String = Me.tboxZipcodeOfPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
+    Dim pre    As String = Me.tboxPrefectureOfPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
     Dim office As String = Me.tboxPostOffice.Text.Replace("?"c, ".").Replace("？", "."c)
     
     If zip = String.Empty AndAlso pre = String.Empty AndAlso office = String.Empty Then
@@ -298,52 +301,97 @@ Public Partial Class MainForm
         office,       DirectCast(Me.cboxMatchingModeOfPostOffice.SelectedValue, MatchingMode))
   End Function
   
-  Private Sub SetTextToControl(control As Control, msg As String)
-    If control.InvokeRequired Then
-      control.Invoke(
-        New SetControlAndStringDelegate(AddressOf SetTextToControl),
-        New Object() { control, msg })
+  ''' <summary>
+  ''' DataGridViewの表示テーブルを初期化する。
+  ''' </summary>
+  Private Function InitDataGridViewTable(addrType As AddressType) As DataTable
+    Dim table As DataTable
+    ' 普通の住所を検索する場合
+    If addrType = AddressType.Address Then
+      table = CreateAddressTable()
+      Me.dataGridView1.DataSource = table
+      ' 列の表示幅と表示順を設定
+      Me.dataGridView1.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      Me.dataGridView1.Columns(0).DisplayIndex = 0
+      Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      Me.dataGridView1.Columns(1).DisplayIndex = 1
+    ' 郵便局を検索する場合
     Else
-      control.Text = msg
-    End If    
-  End Sub
-  
-  Private Sub ClearAddressView(addrType As AddressType)
-    If Me.dataGridView1.InvokeRequired Then
-      Me.dataGridView1.Invoke(
-        New SetAddressTypeDelegate(AddressOf ClearAddressView),
-        New Object() { addrType })
-    Else
-      If addrType = AddressType.Address Then
-        Me.addressDataTable = CreateAddressTable()
-        Me.dataGridView1.DataSource = Me.addressDataTable
-        Me.dataGridView1.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      Else
-        Me.addressDataTable = CreateAddressAndOfficeTable()
-        Me.dataGridView1.DataSource = Me.addressDataTable
-        Me.dataGridView1.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.dataGridView1.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-      End If
-      
-      Me.dataGridView1.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders)
+      table = CreateAddressAndOfficeTable()
+      Me.dataGridView1.DataSource = table
+      ' 列の表示幅と表示順を設定
+      Me.dataGridView1.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      Me.dataGridView1.Columns(0).DisplayIndex = 0
+      Me.dataGridView1.Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      Me.dataGridView1.Columns(1).DisplayIndex = 1
+      Me.dataGridView1.Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+      Me.dataGridView1.Columns(2).DisplayIndex = 2
     End If
-  End Sub
+    
+    Return table    
+  End Function
   
   ''' <summary>
-  ''' 検索するアドレスの種類を取得する。
+  ''' 住所を格納するテーブルを作成。
   ''' </summary>
-  Private Function GetSearchAddressType() As AddressType
-    Dim page As Integer = Me.tabControl1.SelectedIndex
-    If page = 0 Then
-      Return AddressType.Address
-    ElseIf page = 1
-      Return AddressType.PostOffice
-    Else
-      Throw New InvalidOperationException("selected invalid tab page")
-    End If
+  Private Function CreateAddressTable() As DataTable
+    Dim table As New DataTable
+    table.Columns.Add(CreateTableColumn(COLUMN_NAME_ZIP))
+    table.Columns.Add(CreateTableColumn(COLUMN_NAME_ADDRESS))
+    
+    Return table
   End Function
+  
+  ''' <summary>
+  ''' 郵便局の住所を格納するテーブルを作成。
+  ''' </summary>
+  Private Function CreateAddressAndOfficeTable() As DataTable
+    Dim table As New DataTable
+    table.Columns.Add(CreateTableColumn(COLUMN_NAME_OFFICE))
+    table.Columns.Add(CreateTableColumn(COLUMN_NAME_ZIP))
+    table.Columns.Add(CreateTableColumn(COLUMN_NAME_ADDRESS))
+    
+    Return table
+  End Function
+  
+  ''' <summary>
+  ''' テーブルの列を生成。
+  ''' </summary>
+  Private Function CreateTableColumn(colName As String) As DataColumn
+    Dim col As New DataColumn
+    col.DataType = GetType(String)
+    col.ColumnName = colName
+    col.AutoIncrement = False
+    
+    Return col
+  End Function
+  
+  ''' <summary>
+  ''' テーブルにアドレスを格納し、表示を更新する。
+  ''' </summary>
+  ''' <param name="table"></param>
+  ''' <param name="addr"></param>
+  Private Sub ShowAddress(addr As AddressWords)
+    If Me.dataGridView1.InvokeRequired Then
+      Me.dataGridView1.Invoke(
+        New SetAddrDelegate(AddressOf ShowAddress),
+        New Object() { addr })
+    Else
+      Dim table = DirectCast(Me.dataGridView1.DataSource, DataTable)
+      
+      Dim row As DataRow = table.NewRow
+      If table.Columns.Contains(COLUMN_NAME_OFFICE) Then
+        row(COLUMN_NAME_OFFICE) = addr.Office(0)
+      End If
+      row(COLUMN_NAME_ZIP)     = addr.Zipcode(0)
+      row(COLUMN_NAME_ADDRESS) = addr.FullName
+      table.Rows.Add(row)
+      
+      Me.lblFoundAddr.Text   = addr.FullName
+      Me.lblResultCount.Text = table.Rows.Count.ToString & " 件"
+      Me.dataGridView1.Update
+    End If
+  End Sub
   
   ''' <summary>
   ''' DataGridViewのテキストを編集しようとしたときに発生するイベントハンドラ
@@ -355,79 +403,17 @@ Public Partial Class MainForm
     Dim tbox = DirectCast(e.Control, TextBox)
     tbox.ReadOnly = True
   End Sub
-
-  Private Function CreateAddressTable() As DataTable
-    Dim table As New DataTable
-    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_ZIP))
-    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_ADDRESS))
-    
-    Return table
-  End Function
-
-  Private Function CreateAddressAndOfficeTable() As DataTable
-    Dim table As New DataTable
-    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_OFFICE))
-    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_ZIP))
-    table.Columns.Add(CreateAddressTableColumn(COLUMN_NAME_ADDRESS))
-    
-    Return table
-  End Function
   
-  Private Function CreateAddressTableColumn(colName As String) As DataColumn
-    Dim col As New DataColumn
-    col.DataType = GetType(String)
-    col.ColumnName = colName
-    col.AutoIncrement = False
-    
-    Return col
-  End Function
-  
-  Private Sub AddAddressToTable(addr As AddressWords)
-    If Me.dataGridView1.InvokeRequired Then
-      Me.dataGridView1.Invoke(
-        New SetAddrDelegate(AddressOf AddAddressToTable),
-        New Object() { addr })
+  Private Sub SetTextToControl(control As Control, msg As String)
+    If control.InvokeRequired Then
+      control.Invoke(
+        New SetControlAndStringDelegate(AddressOf SetTextToControl),
+        New Object() { control, msg })
     Else
-      Dim row As DataRow = Me.addressDataTable.NewRow
-      row(COLUMN_NAME_ZIP)     = addr.Zipcode(0)
-      row(COLUMN_NAME_ADDRESS) = addr.FullName
-      Me.addressDataTable.Rows.Add(row)
-      
-      Me.lblFoundAddr.Text   = addr.FullName
-      Me.lblResultCount.Text = Me.addressDataTable.Rows.Count.ToString & " 件"
-      Me.dataGridView1.Update
-    End If
+      control.Text = msg
+    End If    
   End Sub
   
-  Private Sub AddAddressAndOfficeToTable(addr As AddressWords)
-    If Me.dataGridView1.InvokeRequired Then
-      Me.dataGridView1.Invoke(
-        New SetAddrDelegate(AddressOf AddAddressAndOfficeToTable),
-        New Object() { addr })
-    Else
-      Dim row As DataRow = Me.addressDataTable.NewRow
-      row(COLUMN_NAME_OFFICE)  = addr.Office(0)
-      row(COLUMN_NAME_ZIP)     = addr.Zipcode(0)
-      row(COLUMN_NAME_ADDRESS) = addr.FullName
-      Me.addressDataTable.Rows.Add(row)
-      
-      Me.lblFoundAddr.Text   = addr.FullName
-      Me.lblResultCount.Text = Me.addressDataTable.Rows.Count.ToString & " 件"
-      Me.dataGridView1.Update
-    End If
-  End Sub
-  
-  Private Sub UpdateAddressView()
-    If Me.dataGridView1.InvokeRequired Then
-      Me.dataGridView1.Invoke(
-        New NoArgumentsDelegate(AddressOf UpdateAddressView))
-    Else
-      Me.lblResultCount.Text = Me.addressDataTable.Rows.Count.ToString & " 件"
-      Me.dataGridView1.DataSource = Me.addressDataTable
-      Me.dataGridView1.Update
-    End If
-  End Sub
- 
   ''' <summary>
   ''' タイトルバーにアプリケーション名とバージョン番号をセットする。
   ''' </summary>
@@ -440,11 +426,8 @@ Public Partial Class MainForm
     MsgBox.ShowError(ex.Message)
   End Sub
   
-  Private Delegate Sub NoArgumentsDelegate()
-  Private Delegate Sub SetStringDelegate(str As String)
   Private Delegate Sub SetAddrDelegate(addr As AddressWords)
   Private Delegate Sub SetControlAndStringDelegate(control As Control, str As String)
-  Private Delegate Sub SetAddressTypeDelegate(addrType As AddressType)
   Private Delegate Sub SetExceptionDelegate(ex As Exception)
 
 End Class
