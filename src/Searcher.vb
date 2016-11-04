@@ -92,7 +92,7 @@ Public Class Searcher
     Search(Me.searchingWords, callback)
     
     ' 検索終了時に実行されるタスクを実行
-    Task.Factory.StartNew(Sub() FinallyTask(finallyCallback))
+    DoEnd(finallyCallback)
   End Sub
   
   ''' <summary>
@@ -166,22 +166,24 @@ Public Class Searcher
   End Sub
   
   ''' <summary>
-  ''' 検索終了時に実行するタスク。
+  '''検索終了時にタスクを実行する。
   ''' </summary>
-  ''' <param name="callback"></param>
-  Private Sub FinallyTask(callback As Action(Of ConcurrentQueue(Of Task)))
-    ' すべてのタスクが終了するまで待機
-    While True
-      Threading.Thread.Sleep(50)
-      If Task.WaitAll(tasks.ToArray, 0) Then
-        Me.running = False
-        Exit While
-      End If
-    End While
-    
-    If callback IsNot Nothing Then
-      callback(tasks)
-    End If
+  Private Sub DoEnd(callback As Action(Of ConcurrentQueue(Of Task)))
+    Task.Factory.StartNew(
+      Sub()
+        ' すべてのタスクが終了するまで待機
+        While True
+          Threading.Thread.Sleep(50)
+          If Task.WaitAll(tasks.ToArray, 0) Then
+            Me.running = False
+            Exit While
+          End If
+        End While
+        
+        If callback IsNot Nothing Then
+          callback(tasks)
+        End If
+      End Sub)
   End Sub
   
   ''' <summary>
