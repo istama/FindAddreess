@@ -79,8 +79,14 @@ Public Class Searcher
           ' 停止命令があった場合
           If Not Me.running Then Return
           ' 既に取得した郵便番号ならこの先の処理は行わないようにする
+          ' ただし、同じ郵便番号の郵便局があるため、郵便番号による検索はこれに吹くまない
           Dim fields As String() = csv.Split(","c)
-          If fields.Count > 0 AndAlso foundZipList.Contains(fields(0)) Then Return
+          If _
+            param.SearchingAddressItem <> AddressItem.Zipcode AndAlso
+            fields.Count > 0                                   AndAlso
+            foundZipList.Contains(fields(0)) Then
+            Return
+          End If
           
           Try
             Dim addr As AddressWords = CreateAddressWords(csv, Me.addrType, param.SearchingAddressItem)
